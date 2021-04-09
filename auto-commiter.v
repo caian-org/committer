@@ -82,7 +82,7 @@ fn do_commit() ?(string, string) {
 	msg := gen_message()
 
 	os.write_file(msg_file, msg) or {
-		return error('could not write on file "$msg_file", got: $err.msg')
+		return error('could not write file "$msg_file", got: $err.msg')
 	}
 
 	exec('git commit --allow-empty --file $msg_file') or {
@@ -94,7 +94,7 @@ fn do_commit() ?(string, string) {
 	}
 
 	hash := exec('git rev-parse HEAD') or {
-		return error('could not retrieve of last commit; got: $err.msg')
+		return error('could not retrieve last commit; got: $err.msg')
 	}
 
 	return hash, msg
