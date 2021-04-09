@@ -2,6 +2,7 @@ module main
 
 import os
 import rand
+import term
 
 
 const (
@@ -47,14 +48,16 @@ fn gen_message() string {
 	return '$scrambled_eggs $phrase'
 }
 
-fn exec(cmd string) ? {
+fn exec(cmd string) ?string {
 	res := os.execute(cmd)
 	if res.exit_code != 0 {
 		return error(res.output)
 	}
+
+	return res.output
 }
 
-fn do_commit() ? {
+fn do_commit() ?(string, string) {
 	msg_file := os.join_path(os.getwd(), 'commit.txt')
 	msg := gen_message()
 
@@ -69,13 +72,24 @@ fn do_commit() ? {
 	os.rm(msg_file) or {
 		return error('could not remove file "$msg_file"; got: $err.msg')
 	}
+
+	hash := exec('git rev-parse HEAD') or {
+		return error('could not retrieve of last commit; got: $err.msg')
+	}
+
+	return hash, msg
 }
 
 
 fn main() {
-	commits_t := rand.u32_in_range(2, 6)
+	commits_t := rand.u32_in_range(20, 60)
 
 	for i := 0; i < commits_t; i++ {
-		do_commit() or { panic(err.msg) }
+		git_hash, git_msg := do_commit() or { panic(err.msg) }
+		hc := term.bold('[${git_hash.substr(0, 7)}]')
+
+		println(
+			'\n * ${term.bright_cyan('COMMITED:')} $hc $git_msg\n'
+		)
 	}
 }
