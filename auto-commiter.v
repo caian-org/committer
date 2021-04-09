@@ -82,7 +82,7 @@ fn do_commit() ?(string, string) {
 
 
 fn main() {
-	commits_t := rand.u32_in_range(20, 60)
+	commits_t := rand.u32_in_range(10, 20)
 
 	println('')
 	for i := 0; i < commits_t; i++ {
