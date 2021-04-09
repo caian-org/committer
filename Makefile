@@ -1,8 +1,9 @@
 .DEFAULT_GOAL := build
 
 VC = v
-VFLAGS = -W
+VFLAGS = -W -prod
+ARTIFACT = commiter
 
 
 build:
-	@$(VC) $(VFLAGS) run auto-commiter.v
+	@$(VC) $(VFLAGS) auto-commiter.v -o $(ARTIFACT)
