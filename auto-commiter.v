@@ -1,5 +1,6 @@
 module main
 
+import os
 import rand
 
 
@@ -26,7 +27,7 @@ fn get_ipsum_word() string {
 	return lorem_ipsum[rand.i64n(lorem_ipsum.len)]
 }
 
-fn get_commit_msg() string {
+fn gen_message() string {
 	// we want a bit of "garbage" to test if the char escape filters are working properly
 	scrambled_eggs := rand.ascii(32)
 
@@ -46,10 +47,35 @@ fn get_commit_msg() string {
 	return '$scrambled_eggs $phrase'
 }
 
+fn exec(cmd string) ? {
+	res := os.execute(cmd)
+	if res.exit_code != 0 {
+		return error(res.output)
+	}
+}
+
+fn do_commit() ? {
+	msg_file := os.join_path(os.getwd(), 'commit.txt')
+	msg := gen_message()
+
+	os.write_file(msg_file, msg) or {
+		return error('could not write on file "$msg_file", got: $err.msg')
+	}
+
+	exec('git commit --allow-empty --file $msg_file') or {
+		return error('could not commit, got: $err.msg')
+	}
+
+	os.rm(msg_file) or {
+		return error('could not remove file "$msg_file"; got: $err.msg')
+	}
+}
+
+
 fn main() {
-	commits_t := rand.u32_in_range(20, 60)
+	commits_t := rand.u32_in_range(2, 6)
 
 	for i := 0; i < commits_t; i++ {
-		println(get_commit_msg())
+		do_commit() or { panic(err.msg) }
 	}
 }
