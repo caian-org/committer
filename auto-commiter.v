@@ -82,14 +82,18 @@ fn do_commit() ?(string, string) {
 
 
 fn main() {
-	commits_t := rand.u32_in_range(20, 60)
+	commits_t := rand.u32_in_range(2, 6)
 
+	println('')
 	for i := 0; i < commits_t; i++ {
 		git_hash, git_msg := do_commit() or { panic(err.msg) }
 		hc := term.bold('[${git_hash.substr(0, 7)}]')
 
 		println(
-			'\n * ${term.bright_cyan('COMMITED:')} $hc $git_msg\n'
+			' * ${term.bright_cyan('COMMITED:')} $hc $git_msg'
 		)
 	}
+
+	mut fm := term.bright_red(' > commited $commits_t times')
+	println('\n' + term.bold(fm) + '\n')
 }
