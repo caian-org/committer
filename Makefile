@@ -4,6 +4,8 @@ VC = v
 VFLAGS = -W -prod
 ARTIFACT = commiter
 
+HERE = $(shell pwd)
+
 
 build:
-	@$(VC) $(VFLAGS) auto-commiter.v -o $(ARTIFACT)
+	@cd $(HERE) && $(VC) $(VFLAGS) auto-commiter.v -o $(ARTIFACT)
