@@ -100,20 +100,26 @@ fn do_commit() ?(string, string) {
 	return hash, msg
 }
 
+fn err_m(txt string) string {
+	return term.bright_red(term.bold(txt))
+}
+
+fn suc_m(txt string) string {
+	return term.bright_green(term.bold(txt))
+}
 
 fn main() {
 	commits_t := rand.u32_in_range(10, 20)
 
 	println('')
 	for i := 0; i < commits_t; i++ {
-		git_hash, git_msg := do_commit() or { panic(err.msg) }
-		hc := term.bold('[${git_hash.substr(0, 7)}]')
+		git_hash, git_msg := do_commit() or { panic(err_m(err.msg)) }
 
+		hc := term.bold('[${git_hash.substr(0, 7)}]')
 		println(
 			' * ${term.bright_cyan('COMMITED:')} $hc $git_msg'
 		)
 	}
 
-	mut fm := term.bright_red(' > commited $commits_t times')
-	println('\n' + term.bold(fm) + '\n')
+	println('\n' + suc_m(' > commited $commits_t times') + '\n')
 }
