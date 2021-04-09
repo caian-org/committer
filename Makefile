@@ -2,10 +2,10 @@
 
 VC = v
 VFLAGS = -W -prod
-ARTIFACT = commiter
+ARTIFACT = committer
 
 HERE = $(shell pwd)
 
 
 build:
-	@cd $(HERE) && $(VC) $(VFLAGS) auto-commiter.v -o $(ARTIFACT)
+	@cd $(HERE) && $(VC) $(VFLAGS) committer.v -o $(ARTIFACT)
