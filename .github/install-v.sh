@@ -18,7 +18,7 @@ echo "Downloading from: $URL"
 
 (
     cd /tmp
-    curl -q -L -O "$URL"
+    curl -L -O "$URL"
     unzip -q "$FN"
     printf "\n\n"
 
