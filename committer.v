@@ -100,6 +100,15 @@ fn do_commit() ?(string, string) {
 	return hash, msg
 }
 
+fn add_tag() ?string {
+	tag := rand.hex(32)
+	exec('git tag $tag') or {
+		return error('could not add tag "$tag"')
+	}
+
+	return tag
+}
+
 fn err_m(txt string) string {
 	return term.bright_red(term.bold(txt))
 }
@@ -121,5 +130,11 @@ fn main() {
 		)
 	}
 
-	println('\n' + suc_m(' > commited $commits_t times') + '\n')
+	tag := add_tag() or { panic(err_m(err.msg)) }
+	println(
+		'\n'
+		+ suc_m(' > commited $commits_t times\n')
+		+ suc_m(' > closed at tag $tag\n')
+	)
+
 }
