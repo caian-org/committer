@@ -3,9 +3,9 @@ name: release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   multi-os-binaries:
@@ -61,7 +61,7 @@ jobs:
           curl -q -L -O "https://github.com/caian-org/vrelease/releases/download/v0.1.1/vrelease-linux"
           chmod +x vrelease-linux
 
-          ./vrelease-linux -d \
+          ./vrelease-linux \
             -a committer-linux \
             -a committer-macos \
             -a committer-windows.exe

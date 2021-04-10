@@ -3,17 +3,18 @@ name: build-and-test
 on:
   push:
     branches:
-      - '*'
+      - master
     tags:
-      - 'v*'
+      - "v*"
     paths-ignore:
-      - '**.md'
-
+      - "**.md"
   pull_request:
     branches:
-      - '*'
+      - "*"
+    tags:
+      - "*"
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   multi-os:
@@ -56,6 +57,11 @@ jobs:
         run: |
           git config --global user.email "hi@caian.org"
           git config --global user.name "Caian R. Ertl"
+
+      - name: See info
+        run: |
+          ./committer -h
+          ./committer -v
 
       - name: Execute in loop
         run: |
