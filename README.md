@@ -1,4 +1,6 @@
-[![Build & Test][gh-bnt-shield]][gh-bnt-url] [![Release][gh-release-shield]][gh-release-url] ![[GitHub tag][tag-shield]][tag-url]
+[![Build & Test][gh-bnt-shield]][gh-bnt-url]
+[![Release][gh-release-shield]][gh-release-url]
+[![GitHub tag][tag-shield]][tag-url]
 
 # committer
 
@@ -8,7 +10,7 @@
 [gh-release-shield]: https://img.shields.io/github/workflow/status/caian-org/committer/release?label=release&logo=github&style=flat-square
 [gh-release-url]: https://github.com/caian-org/committer/actions/workflows/release.yml
 
-[tag-shield]: https://img.shields.io/github/tag/caian-org/committer.svg?style=flat-square
+[tag-shield]: https://img.shields.io/github/tag/caian-org/committer.svg?logo=git&logoColor=FFF&style=flat-square
 [tag-url]: https://github.com/caian-org/committer/releases
 
 
