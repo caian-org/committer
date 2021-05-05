@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build
 
 VC = v
-VFLAGS = -W -prod
+VFLAGS = -W -prod -compress
 ARTIFACT = committer
 
 HERE = $(shell pwd)
