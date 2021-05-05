@@ -86,7 +86,7 @@ fn gen_body(wrap_text bool) string {
 		len  := word.len + 1
 
 		c += len
-		if c <= 70 {
+		if c <= 60 {
 			body << word
 			continue
 		}
