@@ -58,9 +58,7 @@ fn gen_message() string {
 }
 
 fn concat_body(words []string) string {
-	return words
-		.join(' ')
-		.add('.')
+	return (words.join(' ') + '.')
 		.split('\n')
 		.map(fn (w string) string { return w.trim(' ') })
 		.join('\n')
