@@ -58,7 +58,7 @@ jobs:
 
       - name: Make release
         run: |
-          curl -q -L -O "https://github.com/caian-org/vrelease/releases/download/v0.1.1/vrelease-linux"
+          curl -q -L -O "https://github.com/caian-org/vrelease/releases/download/v0.3.2/vrelease-linux"
           chmod +x vrelease-linux
 
           ./vrelease-linux \
