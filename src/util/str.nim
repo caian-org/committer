@@ -10,3 +10,6 @@ func toBrightCyanColor* (t: string): string =
 
 func toBoldStyle* (t: string): string =
   ansiStyleCode(styleBright) & t & ansiResetCode
+
+proc successMessage* (t: string) =
+  styledEcho styleBright, fgGreen, t, ansiResetCode

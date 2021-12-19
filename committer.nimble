@@ -11,3 +11,4 @@ bin           = @["committer"]
 # Dependencies
 
 requires "nim >= 1.6.0"
+requires "semver == 1.1.1"

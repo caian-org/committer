@@ -6,6 +6,7 @@ import std/sequtils
 import std/sugar
 import system/io
 
+import semver
 import util/str
 
 const
@@ -29,11 +30,6 @@ const
   "sodales", "class", "aptent", "taciti", "sociosqu", "ad", "litora",
   "torquent", "per", "conubia", "nostra", "inceptos", "himenaeos", "nam",
   "auctor", "phasellus", "eleifend", "ultricies", "dignissim", "rutrum"]
-
-type
-  CommitOpts = object
-    includeBody : bool
-    wrapText    : bool
 
 randomize()
 
@@ -77,13 +73,11 @@ proc getCommitMessage (): string =
 
   return phrase
 
-proc commit (opts: CommitOpts): (string, string) =
-  var msg = getCommitMessage()
+proc runCommitCommand (withLongerMessage: bool): (string, string) =
+  let msg = getCommitMessage()
+  let fullMsg = if withLongerMessage: (msg & "\n\n" & "aaaa") else: msg
 
-  if opts.includeBody:
-    msg = msg & "\n\n" & "aaaa"
-
-  commitFile.writeFile(msg)
+  commitFile.writeFile(fullMsg)
   discard execCmd("git commit --allow-empty --file " & commitFile)
   commitFile.removeFile()
 
@@ -91,11 +85,11 @@ proc commit (opts: CommitOpts): (string, string) =
 
   return (hash, msg)
 
-proc doIt (opts: CommitOpts) =
+proc commit (withLongerMessage: bool = false) =
   proc limit (t: string, v: int): string =
     if len(t) > v: t.replace("\n", " ").substring(0, v - 1) else: t
 
-  let (hash, msg) = commit(opts)
+  let (hash, msg) = runCommitCommand(withLongerMessage)
 
   echo format(
     " * $1 $2 $3",
@@ -104,13 +98,48 @@ proc doIt (opts: CommitOpts) =
     msg.limit(99)
   )
 
+proc newSemanticTag (): string =
+  let (t, _) = execCmd("git tag --sort=-creatordate")
+  let tags = t.strip().split("\n")
+
+  var lastTag = tags[0].strip()
+  if lastTag == "":
+      lastTag = "0.1.0"
+
+  let s = parseVersion(lastTag)
+  var
+    major = s.major
+    minor = s.minor
+    patch = s.patch
+
+  let chance = rand(1..20)
+
+  if chance mod 5 == 0:
+    major += 1
+  elif chance mod 2 == 0:
+    minor += 1
+  else:
+    patch += 1
+
+  let newVer = "v" & $newVersion(major, minor, patch)
+  discard execCmd("git tag " & newVer)
+
+  return newVer
+
 # ...
 proc main () =
   let commitAmount = rand(10..20)
 
   echo ""
   for i in 1..commitAmount:
-    doIt(CommitOpts())
+    # commit with longer message on the last iteration
+    commit(withLongerMessage = (i == commitAmount))
+
+  let tag = newSemanticTag()
+
+  echo ""
+  successMessage(format(" > commited $1 times", commitAmount))
+  successMessage(format(" > closed at tag $1", tag))
 
 when isMainModule:
   main()
