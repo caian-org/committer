@@ -66,4 +66,4 @@ jobs:
             -a committer-macos \
             -a committer-windows.exe
         env:
-          VRELEASE_GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          VRELEASE_AUTH_TOKEN: "${{ secrets.VR_TOKEN }}"
