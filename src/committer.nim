@@ -60,6 +60,26 @@ proc execCmd (cmd: string, panicOnError = true): (string, int) =
 proc getIpsumWord (): string =
   loremIpsum[rand(len(loremIpsum) - 1)]
 
+proc getCommitBody (): string =
+  var words: seq[string] = @[]
+  words.add(getIpsumWord().capitalizeAscii())
+
+  var c = 0
+  let t = rand(32..64)
+  for i in 1..t:
+    let word = getIpsumWord()
+    let length = len(word) + 1
+
+    c += length
+    if c < 60:
+      words.add(word)
+      continue
+
+    words.add(word & "\n")
+    c = 0
+
+  return words.join(" ").split("\n").mapIt(it.strip()).join("\n") & "."
+
 proc getCommitMessage (): string =
   var phrase = rand(3..9)
     .times(() => getIpsumWord() & (if rand(6) == 0: "," else: ""))
@@ -75,7 +95,7 @@ proc getCommitMessage (): string =
 
 proc runCommitCommand (withLongerMessage: bool): (string, string) =
   let msg = getCommitMessage()
-  let fullMsg = if withLongerMessage: (msg & "\n\n" & "aaaa") else: msg
+  let fullMsg = if withLongerMessage: (msg & "\n\n" & getCommitBody()) else: msg
 
   commitFile.writeFile(fullMsg)
   discard execCmd("git commit --allow-empty --file " & commitFile)
