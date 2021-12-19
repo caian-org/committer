@@ -64,7 +64,7 @@ jobs:
       - name: Execute in loop
         run: |
           # run a couple of times as a "stress test"
-          for i in $(seq 1 50); do ./committer; done
+          for i in {1..50}; do ./committer && sleep 1; done
 
       - name: Rename artifact
         run: |
