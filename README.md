@@ -8,7 +8,7 @@
 [gh-bnt-url]: https://github.com/caian-org/committer/actions/workflows/build-many.yml
 
 [gh-release-shield]: https://img.shields.io/github/workflow/status/caian-org/committer/release?label=release&logo=github&style=flat-square
-[gh-release-url]: https://github.com/caian-org/committer/actions/workflows/release.yml
+[gh-release-url]: https://github.com/caian-org/committer/actions/workflows/release-all.yml
 
 [tag-shield]: https://img.shields.io/github/tag/caian-org/committer.svg?logo=git&logoColor=FFF&style=flat-square
 [tag-url]: https://github.com/caian-org/committer/releases
