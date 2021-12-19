@@ -29,44 +29,42 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-      - name: Checkout to committer
+      - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-      - name: Pre-build steps
+      - name: MacOS pre-build steps
         run: |
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ];  then sudo apt-get install -y libssl-dev; fi
-          if [ "${{ matrix.os }}" = "macos-latest" ];   then gem install bundler;  fi
-          if [ "${{ matrix.os }}" = "macos-latest" ];   then brew install openssl; fi
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then choco install curl; fi
+          gem install bundler
+          brew install upx
+        if: ${{ matrix.os == 'macos-latest' }}
 
-      - name: Environment info
-        run: echo $GITHUB_SHA $GITHUB_REF
+      - name: Windows pre-build steps
+        run: |
+          choco install upx
+        if: ${{ matrix.os == 'windows-latest' }}
 
-      - name: Add V download dir to PATH
-        run: echo "/tmp/v" >> $GITHUB_PATH
+      - name: Setup Nim
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: '1.6.0'
 
-      - name: Install V
-        run: bash "${GITHUB_WORKSPACE}/.github/install-v.sh"
-        env:
-          OS: "${{ matrix.os }}"
+      - name: Refresh package list
+        run: nimble refresh
 
-      - name: Compile committer
-        run: make
+      - name: Compile
+        run: make release
 
       - name: Configure git
         run: |
           git config --global user.email "hi@caian.org"
-          git config --global user.name "Caian R. Ertl"
-
-      - name: See info
-        run: |
-          ./committer -h
-          ./committer -v
+          git config --global user.name "Caian Ertl"
 
       - name: Execute in loop
         run: |
           # run a couple of times as a "stress test"
-          for i in $(seq 1 20); do ./committer; done
+          for i in {1..50}; do ./committer && sleep 1; done
 
       - name: Rename artifact
         run: |
