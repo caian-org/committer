@@ -116,8 +116,11 @@ proc newSemanticTag (): string =
 
   if chance mod 5 == 0:
     major += 1
+    minor = 0
+    patch = 0
   elif chance mod 2 == 0:
     minor += 1
+    patch = 0
   else:
     patch += 1
 
