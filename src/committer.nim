@@ -1,9 +1,12 @@
+import std/os
 import std/osproc
 import std/random
 import std/strutils
 import std/sequtils
-import std/strutils
 import std/sugar
+import system/io
+
+import util/str
 
 const
   loremIpsum = @["lorem", "ipsum", "dolor", "sit", "amet", "consectetur",
@@ -34,6 +37,8 @@ type
 
 randomize()
 
+let commitFile = joinPath(getCurrentDir(), "commit.txt")
+
 
 # ...
 func times [T](amount: int, f: () -> T): seq[T] =
@@ -61,7 +66,7 @@ proc getIpsumWord (): string =
 
 proc getCommitMessage (): string =
   var phrase = rand(3..9)
-    .times(() => getIpsumWord() & (if rand(0..7) == 0: "," else: ""))
+    .times(() => getIpsumWord() & (if rand(6) == 0: "," else: ""))
     .join(" ")
 
   if len(phrase) > 79:
@@ -72,13 +77,40 @@ proc getCommitMessage (): string =
 
   return phrase
 
+proc commit (opts: CommitOpts): (string, string) =
+  var msg = getCommitMessage()
+
+  if opts.includeBody:
+    msg = msg & "\n\n" & "aaaa"
+
+  commitFile.writeFile(msg)
+  discard execCmd("git commit --allow-empty --file " & commitFile)
+  commitFile.removeFile()
+
+  let (hash, _) = execCmd("git rev-parse HEAD")
+
+  return (hash, msg)
+
+proc doIt (opts: CommitOpts) =
+  proc limit (t: string, v: int): string =
+    if len(t) > v: t.replace("\n", " ").substring(0, v - 1) else: t
+
+  let (hash, msg) = commit(opts)
+
+  echo format(
+    " * $1 $2 $3",
+    toBrightCyanColor("COMMITED:"),
+    toBoldStyle(format("[$1]", hash.substring(0, 6))),
+    msg.limit(99)
+  )
+
 # ...
 proc main () =
   let commitAmount = rand(10..20)
 
   echo ""
   for i in 1..commitAmount:
-    echo getCommitMessage()
+    doIt(CommitOpts())
 
 when isMainModule:
   main()
